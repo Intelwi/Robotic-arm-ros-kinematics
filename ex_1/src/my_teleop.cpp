@@ -11,20 +11,23 @@ int main(int argc, char **argv)
    double linear_=0, angular_=0, l_scale_=2, a_scale_=2;
    int kfd = 0;
    struct termios cooked, raw;
-   std::string go_up = "w" , go_down = "z" , turn_left = "a" , turn_right = "s";
    std::string up , down , left , right;
   
   ros::init(argc, argv, "teleop_turtle");
 
   
   ros::NodeHandle n;
-  n.setParam("up", go_up);
-  n.setParam("down", go_down);
-  n.setParam("left", turn_left);
-  n.setParam("right", turn_right);
+  
+  bool ok0 = n.getParamCached("my_teleop/up", up);
+  bool ok1 = n.getParamCached("my_teleop/down", down);
+  bool ok2 = n.getParamCached("my_teleop/left", left);
+  bool ok3 = n.getParamCached("my_teleop/right", right);
+  
+  if ( !ok0 || !ok1 || !ok2 || !ok3) {
+  	puts("ERROR OCCURED"); 
+  	exit (1) ;
+  }
 
-  
-  
   ros::Publisher twist_pub_ = n.advertise<geometry_msgs::Twist> ("turtle1/cmd_vel", 1);
 
     ros::Rate loop_rate(10);
@@ -42,18 +45,18 @@ int main(int argc, char **argv)
     puts("Reading from keyboard");
     puts("---------------------------");
     puts("Use default keys to move the turtle.");
-    printf("Up - %c\n", go_up[0]);
-    printf("Down - %c\n", go_down[0]);
-    printf("Left - %c\n", turn_left[0]);
-    printf("Right - %c\n", turn_right[0]);
+    printf("Up - %c\n", up[0]);
+    printf("Down - %c\n", down[0]);
+    printf("Left - %c\n", left[0]);
+    printf("Right - %c\n", right[0]);
     puts("Or set your own.");
 
     while (ros::ok())
     {
-  	bool ok0 = n.getParamCached("up", up);
-  	bool ok1 = n.getParamCached("down", down);
-  	bool ok2 = n.getParamCached("left", left);
-  	bool ok3 = n.getParamCached("right", right);
+  	bool ok0 = n.getParamCached("my_teleop/up", up);
+  	bool ok1 = n.getParamCached("my_teleop/down", down);
+  	bool ok2 = n.getParamCached("my_teleop/left", left);
+  	bool ok3 = n.getParamCached("my_teleop/right", right);
   
    if ( !ok0 || !ok1 || !ok2 || !ok3) {
   	puts("ERROR OCCURED"); 
