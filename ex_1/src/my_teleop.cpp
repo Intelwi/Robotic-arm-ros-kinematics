@@ -18,10 +18,10 @@ int main(int argc, char **argv)
   
   ros::NodeHandle n;
   
-  bool ok0 = n.getParamCached("my_teleop/up", up);
-  bool ok1 = n.getParamCached("my_teleop/down", down);
-  bool ok2 = n.getParamCached("my_teleop/left", left);
-  bool ok3 = n.getParamCached("my_teleop/right", right);
+  bool ok0 = n.getParamCached("up", up);
+  bool ok1 = n.getParamCached("down", down);
+  bool ok2 = n.getParamCached("left", left);
+  bool ok3 = n.getParamCached("right", right);
   
   if ( !ok0 || !ok1 || !ok2 || !ok3) {
   	puts("ERROR OCCURED"); 
@@ -53,10 +53,10 @@ int main(int argc, char **argv)
 
     while (ros::ok())
     {
-  	bool ok0 = n.getParamCached("my_teleop/up", up);
-  	bool ok1 = n.getParamCached("my_teleop/down", down);
-  	bool ok2 = n.getParamCached("my_teleop/left", left);
-  	bool ok3 = n.getParamCached("my_teleop/right", right);
+  	bool ok0 = n.getParamCached("up", up);
+  	bool ok1 = n.getParamCached("down", down);
+  	bool ok2 = n.getParamCached("left", left);
+  	bool ok3 = n.getParamCached("right", right);
   
    if ( !ok0 || !ok1 || !ok2 || !ok3) {
   	puts("ERROR OCCURED"); 

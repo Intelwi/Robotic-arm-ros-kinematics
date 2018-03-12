@@ -1,9 +1,9 @@
 <launch>
-        	<node pkg="turtlesim" type="turtlesim_node" name="sim"/>
-		<node pkg="ex_1" type="my_teleop" name="my_teleop" output="screen">
-			<param name="up" value="r" type="string"/>
-			<param name="down" value="c" type="string"/> 
-			<param name="right" value="f" type="string"/>
-			<param name="left" value="d" type="string"/>
-		</node>  
+		<param name="up" value="r" type="string"/>
+		<param name="down" value="c" type="string"/> 
+		<param name="right" value="f" type="string"/>
+		<param name="left" value="d" type="string"/>  
+        	
+		<node pkg="turtlesim" type="turtlesim_node" name="sim"/>
+		<node pkg="ex_1" type="my_teleop" name="my_teleop" output="screen"/>
 </launch>
