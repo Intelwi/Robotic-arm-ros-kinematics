@@ -5,7 +5,7 @@
 	<param name="my_teleop/right" value="f" type="string"/>
 	<param name="my_teleop/left" value="d" type="string"/>
 
-	<node pkg="turtlesim" type="turtlesim_node" name="bob"/>
+	<node pkg="turtlesim" type="turtlesim_node" name="sim"/>
 	<node pkg="ex_1" type="my_teleop" name="my_teleop" output="screen"/>
 
 </launch>
