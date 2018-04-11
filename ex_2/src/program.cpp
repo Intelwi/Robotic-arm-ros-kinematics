@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 	tetha[0]=0;//zmienne
 	
 	alpha[1]=-1.57;
-	tetha[1]=0.4;//zmienne
+	tetha[1]=-1;//zmienne
 	
 	a[2]=0.5;//niepotrzbne
 	tetha[2]=0.3;//zmienne
