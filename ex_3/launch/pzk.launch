@@ -1,0 +1,16 @@
+<launch>
+
+  <param name="a2_length" value="0.5" type="double"/>
+  <param name="a3_length" value="0.3" type="double"/>
+  <arg name="model" default="$(find ex_3)/urdf/bombel_dynamic.urdf"/>
+  <arg name="gui" default="true" />
+  <arg name="rvizconfig" default="$(find ex_3)/rviz/urdf.rviz" />
+
+  <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+</launch>

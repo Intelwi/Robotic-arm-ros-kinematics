@@ -1,0 +1,14 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"rotating_base" [label="rotating_base"];
+"arm" [label="arm"];
+"forearm" [label="forearm"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "rotation_joint" [label="xyz: 0 0 0.3 \nrpy: 0 -0 0"]
+"rotation_joint" -> "rotating_base"
+"rotating_base" -> "shoulder" [label="xyz: 0 0 0 \nrpy: -1.57 -1 -2.05482e-16"]
+"shoulder" -> "arm"
+"arm" -> "elbow" [label="xyz: 0.5 0 0 \nrpy: 0 -0 0.3"]
+"elbow" -> "forearm"
+}
