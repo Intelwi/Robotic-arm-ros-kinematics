@@ -22,20 +22,28 @@ int main(int argc, char **argv)
   //ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
   //ros::Subscriber joint_state = n_.subscribe("joint_states", 10, callbackJointState);
 
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(1);
 
   int count = 0;
   while (ros::ok())
   {
     geometry_msgs::PoseStamped msg;
 
-    msg.pose.position.x = 0.2;
-    msg.pose.position.y = 0.3;
-    msg.pose.position.z = 0.4;
-    msg.pose.orientation.w = 1;
+    msg.header.frame_id="/base_link";
+    msg.header.stamp = ros::Time::now();
+    msg.pose.position.x =0;
+    msg.pose.position.y = 0;
+    msg.pose.position.z = 0;
+
+   msg.pose.orientation.x = -4.88070518543e-05;
+   msg.pose.orientation.y = -0.70080730609;
+   msg.pose.orientation.z = 7.50503570579e-05;
+   msg.pose.orientation.w = 0.713350613677;
+
+ROS_INFO("poseStamped orientation: %lf, %lf, %lf, %lf",
+msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z,msg.pose.orientation.w);
 
     poseStampedPub.publish(msg);
-    std::cout<<"hello"<<std::endl;
     ros::spinOnce();
 
     loop_rate.sleep();
