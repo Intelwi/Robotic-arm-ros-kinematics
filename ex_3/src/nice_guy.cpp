@@ -33,8 +33,8 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 
-	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);
-	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);
+	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
+	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
 
 	if ( !ok0 || !ok1 )
 	{
