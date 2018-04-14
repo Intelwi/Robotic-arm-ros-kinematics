@@ -5,6 +5,7 @@
 #include <sstream>
 
 double angle[2];// angles from joint_state_publisher
+double link_bombel[1];// length of links
 
 void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 {
@@ -31,6 +32,16 @@ int main(int argc, char **argv)
   int count = 0;
   while (ros::ok())
   {
+
+	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);
+	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);
+
+	if ( !ok0 || !ok1 )
+	{
+			puts("ERROR OCCURED"); 
+			exit(1);
+	}
+
     geometry_msgs::PoseStamped msg;
 
     msg.header.frame_id="/base_link";
