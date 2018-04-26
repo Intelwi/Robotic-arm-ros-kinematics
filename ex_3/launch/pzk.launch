@@ -14,5 +14,5 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 <node pkg="ex_3" type="nice_guy" name="nice_guy" output="screen"/>
 <node pkg="ex_3" type="nice_guy_working" name="nice_guy_working" output="screen"/>
-
+<node pkg="ex_3" type="nice_guy_working_nokdl" name="nice_guy_working_nokdl" output="screen"/>
 </launch>

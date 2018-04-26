@@ -15,7 +15,7 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
   for(int i; i<3; i++)
   {
    	angle[i]=state->position[i];
-   	std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
+   	//std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
   }
 }
 
