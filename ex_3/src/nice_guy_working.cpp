@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     msg.header.stamp = ros::Time::now();
 
 //---------Matrix----------------
-//macierz 2 układu względem 1
+//macierz 2 układu względem 0
 
 KDL::Vector v1(cos(angle[0])*cos(angle[1]) ,sin(angle[0])*cos(angle[1]),-sin(angle[1]) );
 

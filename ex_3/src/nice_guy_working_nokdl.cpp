@@ -58,19 +58,28 @@ int main(int argc, char **argv)
 
 //-------NON_KDL_Matrix
 //-------------------------------
-    double r1[3][3], r2[3][3], r3[3][3];
+    double r0[3][3], r1[3][3], r2[3][3],r10[3][3], r3[3][3];
+    r0[0][0]=cos(angle[0]);
+    r0[0][1]=-sin(angle[0]);
+    r0[0][2]=0;
+    r0[1][0]=sin(angle[0]);
+    r0[1][1]=cos(angle[0]);
+    r0[1][2]=0;
+    r0[2][0]=0;
+    r0[2][1]=0;
+    r0[2][2]=1;
 
-    r1[0][0]=cos(angle[0])*cos(angle[1]);
-    r1[0][1]=-cos(angle[0])*sin(angle[1]);
-    r1[0][2]=-sin(angle[0]);
-    r1[1][0]=sin(angle[0])*cos(angle[1]);
-    r1[1][1]=-sin(angle[0])*sin(angle[1]);
-    r1[1][2]=cos(angle[0]);
+    r1[0][0]=cos(angle[1]);
+    r1[0][1]=-sin(angle[1]);
+    r1[0][2]=0;
+    r1[1][0]=0;
+    r1[1][1]=0;
+    r1[1][2]=1;
     r1[2][0]=-sin(angle[1]);
     r1[2][1]=-cos(angle[1]);
     r1[2][2]=0;
 
-    r2[0][0]=angle[2];
+    r2[0][0]=cos(angle[2]);
     r2[0][1]=-sin(angle[2]);
     r2[0][2]=0;
     r2[1][0]=sin(angle[2])*cos(alpha[2]);
@@ -87,6 +96,7 @@ int main(int argc, char **argv)
         for(int j = 0; j < 3; ++j)
         {
             r3[i][j]=0;
+	    r10[i][j]=0;
         }
 
     // Multiplying matrix r1 and r2 and storing in array mult.
@@ -94,7 +104,15 @@ int main(int argc, char **argv)
         for(int j = 0; j < 3; ++j)
             for(int k = 0; k < 3; ++k)
             {
-                r3[i][j] += r1[i][k] * r2[k][j];
+                r10[i][j] += r0[i][k] * r1[k][j];
+            }
+
+   // Multiplying matrix r1 and r2 and storing in array mult.
+    for(int i = 0; i < 3; ++i)
+        for(int j = 0; j < 3; ++j)
+            for(int k = 0; k < 3; ++k)
+            {
+                r3[i][j] += r10[i][k] * r2[k][j];
             }
 
    KDL::Vector v1(r3[0][0] ,r3[1][0],r3[2][0]);
