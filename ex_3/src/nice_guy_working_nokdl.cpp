@@ -129,9 +129,9 @@ v3.Normalize();
 //--------Getting_Quaternions-------------
     r3_1.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
 //-----------------------------------------    
-    msg.pose.position.x = 0;
-    msg.pose.position.y = 0;
-    msg.pose.position.z = 0;
+    msg.pose.position.x =cos(angle[0])*cos(angle[1])*link_bombel[0];
+    msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0];
+    msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3;
 
     msg.pose.orientation.x = qaternion[0];
     msg.pose.orientation.y = qaternion[1];
