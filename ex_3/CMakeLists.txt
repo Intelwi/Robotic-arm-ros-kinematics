@@ -203,13 +203,9 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+add_executable(KDL_DKIN src/KDL_DKIN.cpp)
+target_link_libraries(KDL_DKIN ${catkin_LIBRARIES})
 
-add_executable(nice_guy src/nice_guy.cpp)
-target_link_libraries(nice_guy ${catkin_LIBRARIES})
-
-add_executable(nice_guy_working src/nice_guy_working.cpp)
-target_link_libraries(nice_guy_working ${catkin_LIBRARIES})
-
-add_executable(nice_guy_working_nokdl src/nice_guy_working_nokdl.cpp)
-target_link_libraries(nice_guy_working_nokdl ${catkin_LIBRARIES})
+add_executable(NONKDL_DKIN src/NONKDL_DKIN.cpp)
+target_link_libraries(NONKDL_DKIN ${catkin_LIBRARIES})
 #add_dependencies(nice_guy ex_3_generate_messages_cpp)
