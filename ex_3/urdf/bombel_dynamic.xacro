@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
+<robot name="Bombel1" xmlns:xacro="http://ros.org/wiki/xacro">
 
-<robot name="Bombel1">
+<xacro:property name="a2_length" value="$(arg a2_length)" />
+<xacro:property name="a3_length" value="$(arg a3_length)" />
 
  <material name="blue">
    <color rgba="0 0 0.8 1"/>
@@ -35,7 +37,7 @@
     </visual>
   </link>
 
-<joint name="rotation_joint" type="revolute"> <!-- Jak ma sie nie ruszac to type="fixed" -->
+<joint name="rotation_joint" type="revolute">
     <parent link="base_link"/>
      <child link="rotating_base"/>
       <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
@@ -46,10 +48,10 @@
   <link name="arm">
     <visual>
       <geometry>
-        <cylinder length="0.5" radius="0.05"/>
+        <cylinder length="${a2_length}" radius="0.05"/> <!-- Wczytaj z Parameter Server -->
       </geometry>
       <material name="yellow"/>
-      <origin xyz="0.25 0 0" rpy="0 1.57 0"/>
+      <origin xyz="${a2_length/2} 0 0" rpy="0 1.57 0"/>
     </visual>
   </link>
 
@@ -64,10 +66,10 @@
   <link name="forearm">
     <visual>
       <geometry>
-        <cylinder length="0.3" radius="0.05"/>
+        <cylinder length="${a3_length}" radius="0.05"/> <!-- Wczytaj z Parameter Server -->
       </geometry>
       <material name="green"/>
-      <origin xyz="0.15 0 0" rpy="0 1.57 0"/>
+      <origin xyz="${a3_length/2} 0 0" rpy="0 1.57 0"/>
     </visual>
   </link>
 
