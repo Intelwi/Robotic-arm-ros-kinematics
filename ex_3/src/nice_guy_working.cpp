@@ -15,18 +15,27 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
   for(int i; i<3; i++)
   {
    	angle[i]=state->position[i];
-   	//std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
+   	std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
   }
 }
 
 int main(int argc, char **argv)
 {
+
+
+	double alpha[3];
+	
+	for (int i=0; i<3; i++) alpha[i]=0;
+
+	alpha[1]=-1.57;
+	
+	
   ros::init(argc, argv, "NONKDL_DKIN");
   
   geometry_msgs::PoseStamped msg;
   ros::NodeHandle n;
 
-  ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("poseStampedDsr", 1); 
+  ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("KDL_DKIN", 1); 
 
   ros::Subscriber joint_state = n.subscribe("joint_states", 10, callbackJointState);
 
@@ -51,11 +60,12 @@ int main(int argc, char **argv)
     msg.header.stamp = ros::Time::now();
 
 //---------Matrix----------------
+//macierz 2 układu względem 1
 
-  KDL::Vector v1(cos(angle[0])*(cos(angle[1])*cos(angle[2]-angle[1])-sin(angle[1])*sin(angle[2]-angle[1]) ),sin(angle[0])*(cos(angle[1])*cos(angle[2]-angle[1])-sin(angle[1])*sin(angle[2]-angle[1]) ),-cos(angle[1])*sin(angle[2]-angle[1])-sin(angle[1])*cos(angle[2]-angle[1]) );
+KDL::Vector v1(cos(angle[0])*cos(angle[1]) ,sin(angle[0])*cos(angle[1]),-sin(angle[1]) );
 
 
-KDL::Vector v2(-cos(angle[0])*(cos(angle[1])*sin(angle[2]-angle[1])+sin(angle[1])*cos(angle[2]-angle[1]) ),-sin(angle[0])*(cos(angle[1])*sin(angle[2]-angle[1])+sin(angle[1])*cos(angle[2]-angle[1]) ),sin(angle[1])*sin(angle[2]-angle[1])-cos(angle[1])*cos(angle[2]-angle[1]) );
+KDL::Vector v2(-cos(angle[0])*sin(angle[1]) ,-sin(angle[0])*sin(angle[1]),-cos(angle[1])  );
 
 KDL::Vector v3(-sin(angle[0]),cos(angle[0]),0);
     
@@ -63,10 +73,19 @@ v1.Normalize();
 v2.Normalize();
 v3.Normalize();
 
-KDL::Rotation r0(v1,v2,v3);
+KDL::Rotation r1(v1,v2,v3);
+
+//macierz 3 układu wzgledem 2
+
+KDL::Rotation r2(KDL::Vector(cos(angle[2]),sin(angle[2])*cos(alpha[2]),sin(angle[2])*sin(alpha[2])),
+                     KDL::Vector(-sin(angle[2]),cos(angle[2])*cos(alpha[2]),cos(angle[2])*sin(alpha[2])),
+                     KDL::Vector(0,-sin(alpha[2]),cos(alpha[2])));
+
+//złozenie macierzy    
+KDL::Rotation r3=r1*r2;
 
 //--------Getting_Quaternions-------------
-    r0.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
+    r3.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
 //-----------------------------------------    
     msg.pose.position.x =0;
     msg.pose.position.y = 0;
