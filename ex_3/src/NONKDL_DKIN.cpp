@@ -15,7 +15,7 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
   for(int i; i<3; i++)
   {
    	angle[i]=state->position[i];
-   	std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
+   	//std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
   }
 }
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   int count = 0;
   while (ros::ok())
   {
-
+	ros::Rate loop_rate(10);
 	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
 	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
 //-------NON_KDL_Matrix
 //-------------------------------
-    double r0[3][3], r1[3][3], r2[3][3],r10[3][3], r3[3][3];
+    double r0[3][3], r1[3][3], r2[3][3],r10[3][3], r3[3][3], vr[3], vh[3];
     r0[0][0]=cos(angle[0]);
     r0[0][1]=-sin(angle[0]);
     r0[0][2]=0;
@@ -89,7 +89,9 @@ int main(int argc, char **argv)
     r2[2][1]=cos(angle[2])*sin(alpha[2]);
     r2[2][2]=cos(alpha[2]);
 
-   
+    vr[0] = link_bombel[1];
+    vr[1] = 0;
+    vr[2] = 0;
 
     // Initializing elements of matrix mult to 0.
     for(int i = 0; i < 3; ++i)
@@ -126,12 +128,26 @@ v2.Normalize();
 v3.Normalize();  
    KDL::Rotation r3_1(v1,v2,v3);
 
+
+// Multiplying matrix r1 and r2 and storing in array mult.
+    for(int i = 0; i < 3; ++i)
+            for(int k = 0; k < 3; ++k)
+            {
+                vh[i] += r3[i][k] * vr[k];
+            }
+//std::cout<<vh[0]<<" "<<vh[1]<<" "<<vh[2]<<std::endl;
+
+KDL::Vector v4(link_bombel[1],0,0);
+
+KDL::Vector vl=r3_1*v4;
+
 //--------Getting_Quaternions-------------
     r3_1.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
 //-----------------------------------------    
-    msg.pose.position.x =cos(angle[0])*cos(angle[1])*link_bombel[0];
-    msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0];
-    msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3;
+    msg.pose.position.x =cos(angle[0])*cos(angle[1])*link_bombel[0]+vl[0];
+    msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0]+vl[1];
+    msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3+vl[2];
+
 
     msg.pose.orientation.x = qaternion[0];
     msg.pose.orientation.y = qaternion[1];

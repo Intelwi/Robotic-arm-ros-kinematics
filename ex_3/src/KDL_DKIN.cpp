@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
   ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("KDL_DKIN", 1); 
 
-  ros::Subscriber joint_state = n.subscribe("joint_states", 10, callbackJointState);
+  ros::Subscriber joint_state = n.subscribe("joint_states", 1, callbackJointState);
 
   ros::Rate loop_rate(1);
 
@@ -45,6 +45,7 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 
+	ros::Rate loop_rate(10);
 	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
 	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
 
@@ -84,12 +85,19 @@ KDL::Rotation r2(KDL::Vector(cos(angle[2]),sin(angle[2])*cos(alpha[2]),sin(angle
 //złozenie macierzy    
 KDL::Rotation r3=r1*r2;
 
+KDL::Vector v4(link_bombel[1],0,0);
+
+KDL::Vector vr=r3*v4;
+//std::cout<<vr[0]<<" "<<vr[1]<<" "<<vr[2]<<std::endl;
 //--------Getting_Quaternions-------------
+
     r3.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
+
 //-----------------------------------------    
-    msg.pose.position.x =cos(angle[0])*cos(angle[1])*link_bombel[0];
-    msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0];
-    msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3;
+    msg.pose.position.x =cos(angle[0])*cos(angle[1])*link_bombel[0]+vr[0];
+    msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0]+vr[1];
+    msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3+vr[2];
+
 
     msg.pose.orientation.x = qaternion[0];
     msg.pose.orientation.y = qaternion[1];
