@@ -3,9 +3,12 @@
 #include <sensor_msgs/JointState.h>
 #include "geometry_msgs/PoseStamped.h"
 #include <sstream>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 
-double angle[2];// angles from joint_state_publisher
-double link_bombel[1];// length of links
+double angle[3];// angles from joint_state_publisher
+double link_bombel[2];// length of links
+double qaternion[3];//values of quaternions to send
 
 void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 {
@@ -47,15 +50,27 @@ int main(int argc, char **argv)
     msg.header.frame_id="/base_link";
     msg.header.stamp = ros::Time::now();
 
+//---------Matrix----------------
 
+  KDL::Vector v1(cos(angle[0])*(cos(angle[1])*cos(angle[2]-angle[1])-sin(angle[1])*sin(angle[2]-angle[1]) ),sin(angle[0])*(cos(angle[1])*cos(angle[2]-angle[1])-sin(angle[1])*sin(angle[2]-angle[1]) ),-cos(angle[1])*sin(angle[2]-angle[1])-sin(angle[1])*cos(angle[2]-angle[1]) );
+
+KDL::Vector v2(-cos(angle[0])*(cos(angle[1])*sin(angle[2]-angle[1])+sin(angle[1])*cos(angle[2]-angle[1]) ),-sin(angle[0])*(cos(angle[1])*sin(angle[2]-angle[1])+sin(angle[1])*cos(angle[2]-angle[1]) ),sin(angle[1])*sin(angle[2]-angle[1])-cos(angle[1])*cos(angle[2]-angle[1]) );
+
+KDL::Vector v3(-sin(angle[0]),cos(angle[0]),0);
+    
+KDL::Rotation r0(v1,v2,v3);
+
+//--------Getting_Quaternions-------------
+    r0.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
+//-----------------------------------------    
     msg.pose.position.x =0;
     msg.pose.position.y = 0;
     msg.pose.position.z = 0;
 
-    msg.pose.orientation.x = -4.88070518543e-05;
-    msg.pose.orientation.y = -0.70080730609;
-    msg.pose.orientation.z = 7.50503570579e-05;
-    msg.pose.orientation.w = 0.713350613677;
+    msg.pose.orientation.x = qaternion[0];
+    msg.pose.orientation.y = qaternion[1];
+    msg.pose.orientation.z = qaternion[2];
+    msg.pose.orientation.w = qaternion[3];
 
 
 
