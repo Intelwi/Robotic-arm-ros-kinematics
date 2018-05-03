@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+
+
+  <arg name="a2_length" default="0.5"/>
+  <arg name="a3_length" default="0.3"/>
+
+  <param name="a2_length" value="$(arg a2_length)" type="double"/>
+  <param name="a3_length" value="$(arg a3_length)" type="double"/>
+
+  <arg name="model" default="$(find ex_3)/urdf/bombel_dynamic.xacro"/>
+  <arg name="gui" default="true" />
+  <arg name="rvizconfig" default="$(find ex_3)/rviz/urdf.rviz" />
+
+  <param name="use_gui" value="$(arg gui)"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model) a2_length:=$(arg a2_length)  a3_length:=$(arg a3_length)" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>

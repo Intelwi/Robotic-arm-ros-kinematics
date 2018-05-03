@@ -1,0 +1,6 @@
+float64 time
+float64 teta1
+float64 teta2
+float64 teta3
+---
+int16 status
