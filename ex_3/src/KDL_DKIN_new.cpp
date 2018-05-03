@@ -6,25 +6,39 @@
 #include <kdl/frames.hpp>
 #include <kdl/frames_io.hpp>
 
+void warner(const std::__cxx11::basic_string<char> p); // makes name[15]
+
 double angle[3];// angles from joint_state_publisher
 double link_bombel[2];// length of links
 double qaternion[3];//values of quaternions to send
-
+char name[15]; //name of the fault (over range) argument
 
 void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 {
 	for(int i; i<3; i++)
 	{
-		angle[i]=state->position[i];
-		//std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
+		if((i==0 && (state->position[i] > 2.14 || state->position[i] < -2.14)) ||
+		   (i==1 && (state->position[i] > -0.1 || state->position[i] < -1.50)) ||
+		   (i==2 && (state->position[i] > 1.50 || state->position[i] < 0.1))) {
+			warner(state->name[i]);
+			ROS_WARN("\n---Wykroczenie detected---: %s\n", name);
+			continue;
+		}
+		
+		angle[i] = state->position[i];
+		std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
 	}
+}
 
-	/*if(angle[0] > 2.14 || angle[0] < -2.14) {
-		ROS_WARN("\nIn if. Wykroczenie detected.\n");
+
+void warner(const std::__cxx11::basic_string<char> p) {
+	int i=0;
+	while(i < 15 && p[i] != '\0'){
+		name[i] = p[i];
+		i++;
 	}
-	else {
-		ROS_INFO("\nIn else. Jest dobrze\n");
-	}*/
+	name[i] = p[i];
+	//std::cout<<"warner: "<<name<<std::endl;
 }
 
 
@@ -48,13 +62,13 @@ int main(int argc, char **argv)
 
   ros::Subscriber joint_state = n.subscribe("joint_states", 1, callbackJointState);
 
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(10);
 
   int count = 0;
   while (ros::ok())
   {
 
-	ros::Rate loop_rate(10);
+	//ros::Rate loop_rate(10);
 	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
 	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
 
@@ -118,8 +132,11 @@ KDL::Vector vr=r3*v4;
     poseStampedPub.publish(msg); //sending geometry_msgs
     ros::spinOnce();
 
-    loop_rate.sleep();
+    //loop_rate.sleep();
   }
+  //ros::spinOnce();
+
+  loop_rate.sleep();
 
 
   return 0;

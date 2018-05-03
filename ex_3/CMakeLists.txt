@@ -209,3 +209,6 @@ target_link_libraries(KDL_DKIN ${catkin_LIBRARIES})
 add_executable(NONKDL_DKIN src/NONKDL_DKIN.cpp)
 target_link_libraries(NONKDL_DKIN ${catkin_LIBRARIES})
 #add_dependencies(nice_guy ex_3_generate_messages_cpp)
+
+add_executable(KDL_DKIN_new src/KDL_DKIN_new.cpp)
+target_link_libraries(KDL_DKIN_new ${catkin_LIBRARIES})

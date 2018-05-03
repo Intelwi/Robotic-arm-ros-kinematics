@@ -11,4 +11,6 @@
   <node pkg="ex_3" type="KDL_DKIN" name="KDL_DKIN" output="screen"/>
   <node pkg="ex_3" type="NONKDL_DKIN" name="NONKDL_DKIN" output="screen"/>
 
+  <node pkg="ex_3" type="KDL_DKIN_new" name="KDL_DKIN_new" output="screen"/>
+
 </launch>
