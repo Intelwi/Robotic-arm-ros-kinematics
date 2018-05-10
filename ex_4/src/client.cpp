@@ -7,7 +7,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "jint_control_srv_client");
   if (argc != 5)
   {
-    ROS_INFO("usage: client X Y Z Q");
+    ROS_INFO("usage: time , rotation , shoulder , elbow");
     return 1;
   }
 
