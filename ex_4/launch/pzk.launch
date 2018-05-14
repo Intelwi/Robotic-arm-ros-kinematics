@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="model" default="$(find ex_3)/urdf/bombel_dynamic.xacro"/>
+  <arg name="model" default="$(find ex_4)/urdf/bombel_dynamic.xacro"/>
   <arg name="gui" default="true" />
 
   <param name="use_gui" value="$(arg gui)"/>
