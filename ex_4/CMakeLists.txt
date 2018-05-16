@@ -63,6 +63,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_service_files(
    FILES
    JintControlSrv.srv
+   OintControlSrv.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -209,3 +210,9 @@ target_link_libraries(jint ${catkin_LIBRARIES})
 
 add_executable(client src/client.cpp)
 target_link_libraries(client ${catkin_LIBRARIES})
+
+add_executable(oint src/oint.cpp)
+target_link_libraries(oint ${catkin_LIBRARIES})
+
+add_executable(client_oint src/client_oint.cpp)
+target_link_libraries(client_oint ${catkin_LIBRARIES})
