@@ -24,7 +24,14 @@ int main(int argc, char **argv)
 
 	if (client.call(srv))
 	{
-		ROS_INFO("Status: %d", srv.response.status);
+		if(srv.response.status==0)
+		{		
+			ROS_INFO("Obliczenia wykonano poprawnie. Status: %d", srv.response.status);
+		}	
+		else
+		{
+			ROS_INFO("ERROR: Obliczenia nie sa mozliwe do wykonania. Przekroczono limity stawow. Status: %d", srv.response.status);
+		}
 	}
 	else
 	{
