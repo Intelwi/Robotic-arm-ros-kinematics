@@ -1,3 +1,4 @@
+int16 mode
 float64 time
 float64 teta1
 float64 teta2
