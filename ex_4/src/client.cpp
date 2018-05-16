@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "jint_control_srv_client");
+	ros::init(argc, argv, "jint_client");
 	if (argc != 6)
 	{
 		ROS_INFO("usage: mode, time, rotation, shoulder, elbow");
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	ex_4::JintControlSrv srv;
 
 	srv.request.mode = atoi(argv[1]);
-	srv.request.time = atof(argv[2]);
+	srv.request.ttime = atof(argv[2]);
 	srv.request.teta1 = atof(argv[3]);
 	srv.request.teta2 = atof(argv[4]);
 	srv.request.teta3 = atof(argv[5]);

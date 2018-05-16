@@ -1,5 +1,5 @@
 int16 mode
-float64 time
+float64 ttime
 float64 teta1
 float64 teta2
 float64 teta3

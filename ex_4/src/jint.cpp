@@ -13,7 +13,7 @@ float ttime, teta1, teta2, teta3;
 
 
 // interpolacja liniowa, time-czas wykonania ruchu, tetaX - zadane kolejne kąty
-int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/)
+int linear_inter(int mode)
 {
 	k=0;
 	status=0;
@@ -21,7 +21,7 @@ int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/
 	ros::Rate loop_rate(50);
 
 
-	if(time<=0)
+	if(ttime <= 0)
 	{
 		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
 		return -1;
@@ -56,7 +56,7 @@ int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/
 
 //-----------------------counting loop:--------------->>>
 
-	while(k <= sampling*time)
+	while(k <= sampling*ttime)
 	{
 		sensor_msgs::JointState msg;
 		msg.header.stamp = ros::Time::now(); //czas ruchu - bez tego ani rusz!
@@ -67,11 +67,11 @@ int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/
 
 		if(mode == 1)
 		{
-			teta_solv[0] = teta_0[0] + (teta1 - teta_0[0])*k/(time*sampling);
+			teta_solv[0] = teta_0[0] + (teta1 - teta_0[0])*k/(ttime*sampling);
 
-			teta_solv[1] = teta_0[1] + (teta2 - teta_0[1])*k/(time*sampling);
+			teta_solv[1] = teta_0[1] + (teta2 - teta_0[1])*k/(ttime*sampling);
 
-			teta_solv[2] = teta_0[2] + (teta3 - teta_0[2])*k/(time*sampling);
+			teta_solv[2] = teta_0[2] + (teta3 - teta_0[2])*k/(ttime*sampling);
 		}
 
 //---------2nd mode next tetas:
@@ -81,7 +81,7 @@ int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/
 
 		else if(mode == 2)
 		{
-			float tx = k/(time*sampling);
+			float tx = k/(ttime*sampling);
 
 			teta_solv[0] = (1-tx)*teta_0[0] + tx*teta1 + tx*(1-tx)*(a1*(1-tx) + b1*tx);
 
@@ -120,14 +120,15 @@ int linear_inter(int mode, float time/*, float teta1, float teta2, float teta3*/
 
 bool doAJob(ex_4::JintControlSrv::Request &req,  ex_4::JintControlSrv::Response &res)
 {
-	ROS_INFO("mode: %d, time=%f, rotation=%f, shoulder=%f, elbow=%f", req.mode, req.time, req.teta1, req.teta2, req.teta3);
+	ROS_INFO("mode: %d, time=%f, rotation=%f, shoulder=%f, elbow=%f", req.mode, req.ttime, req.teta1, req.teta2, req.teta3);
 
-	ttime = req.time;
+	ttime = req.ttime;
 	teta1 = req.teta1;
 	teta2 = req.teta2;
 	teta3 = req.teta3;
 
-	res.status = linear_inter(req.mode, req.time/*, req.teta1, req.teta2, req.teta3*/);
+	res.status = linear_inter(req.mode);
+  
 	ROS_INFO("sending back response: [%d]", res.status);
 	return true;
 }
@@ -136,7 +137,7 @@ bool doAJob(ex_4::JintControlSrv::Request &req,  ex_4::JintControlSrv::Response 
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "jint_control_srv_server");
+	ros::init(argc, argv, "jint");
 	ros::NodeHandle n;
 
 // tety początkowe:

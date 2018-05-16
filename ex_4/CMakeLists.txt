@@ -204,9 +204,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(gnuj src/gnuj.cpp)
-target_link_libraries(gnuj ${catkin_LIBRARIES})
-
 add_executable(jint src/jint.cpp)
 target_link_libraries(jint ${catkin_LIBRARIES})
 
