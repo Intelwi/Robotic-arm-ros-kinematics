@@ -20,6 +20,32 @@ int linear_inter(float time, float teta1, float teta2, float teta3)
   rj=true, sh=true, el=true;
 
   ros::Rate loop_rate(50);
+
+	if(time<=0)
+	 {
+		ROS_WARN("\nCzas mniejszy lub rowny od zera: %s\n", "time");
+		return -1;
+	}
+
+	if((teta_0[0] + teta1) > 2.14 || (teta_0[0] + teta1) < -2.14)
+	 {
+		ROS_WARN("\n---Wykroczenie detected---: %s\n", "rotation_joint");
+		return -1;
+	}
+
+	if((teta_0[1] + teta2) > -0.1 || (teta_0[1] + teta2) < -1.50) 
+	{
+		ROS_WARN("\n---Wykroczenie detected---: %s\n", "shoulder");
+		return -1;
+	}
+
+	if((teta_0[2] + teta3) > 1.50 || (teta_0[2] + teta3) < 0.1) 
+	{
+		ROS_WARN("\n---Wykroczenie detected---: %s\n", "elbow");
+		return -1;
+	}
+
+
   //-----sending-----
   while(k <= sampling*time)
   {
@@ -29,42 +55,21 @@ int linear_inter(float time, float teta1, float teta2, float teta3)
    	k++;
 
 //-----------------------next tetas:
-	if(rj){
-		rj_ok = teta_solv[0];
+	
+		
 		teta_solv[0] = teta_0[0] + (teta1 - teta_0[0])*k/(time*sampling);
-	}
-	if(sh){
-		sh_ok = teta_solv[0];
+	
+		;
 		teta_solv[1] = teta_0[1] + (teta2 - teta_0[1])*k/(time*sampling);
-	}
-	if(el){
-		el_ok = teta_solv[0];
+	
+		
 		teta_solv[2] = teta_0[2] + (teta3 - teta_0[2])*k/(time*sampling);
-	}
 
 //-----------------------next tetas slow:
 
 
 //-----------------------examining new tetas:
 
-	if(rj && (teta_solv[0] > 2.14 || teta_solv[0] < -2.14)) {
-		ROS_WARN("\n---Wykroczenie detected---: %s\n", "rotation_joint");
-		teta_solv[0] = rj_ok;
-		rj=false;
-		status++;
-	}
-	if(sh && (teta_solv[1] > -0.1 || teta_solv[1] < -1.50)) {
-		ROS_WARN("\n---Wykroczenie detected---: %s\n", "shoulder");
-		teta_solv[1] = sh_ok;
-		sh=false;
-		status++;
-	}
-	if(el && (teta_solv[2] > 1.50 || teta_solv[2] < 0.1)) {
-		ROS_WARN("\n---Wykroczenie detected---: %s\n", "elbow");
-		teta_solv[2] = el_ok;
-		el=false;
-		status++;
-	}
 
 
   	for(int i=0;i<3;i++) msg.position.push_back(teta_solv[i]);
@@ -81,7 +86,7 @@ int linear_inter(float time, float teta1, float teta2, float teta3)
 
   for(int i=0;i<3;i++) teta_0[i] = teta_solv[i];
 
-  return status;
+  return 1;
 }
 
 bool doAJob(ex_4::JintControlSrv::Request  &req,
