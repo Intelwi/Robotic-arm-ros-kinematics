@@ -86,16 +86,40 @@ int linear_inter(int mode)
 		}
 
 //---------sending:
-	
+		KDL::Rotation roll(KDL::Vector(1,0,0),
+                     	KDL::Vector(0,cos(teta_solv[0]),sin(teta_solv[0])),
+			KDL::Vector(0,-sin(teta_solv[0]),cos(teta_solv[0])));
+
+		KDL::Rotation pitch(KDL::Vector(cos(teta_solv[1]),0,-sin(teta_solv[1])),
+                     	KDL::Vector(0,1,0),
+			KDL::Vector(sin(teta_solv[1]),0,cos(teta_solv[1])));
+
+		KDL::Rotation yaw(KDL::Vector(cos(teta_solv[2]),sin(teta_solv[2]),0),
+                     	KDL::Vector(-sin(teta_solv[2]),cos(teta_solv[2]),0),
+			KDL::Vector(0,0,1));
+		KDL::Rotation r1 = roll*pitch*yaw;
+
+/*
+
+		KDL::Vector v1(cos(teta_solv[2])*cos(teta_solv[1]),sin(teta_solv[2])*cos(teta_solv[1]),-sin(teta_solv[1]));
+		KDL::Vector v2(cos(teta_solv[2])*sin(teta_solv[1])*sin(teta_solv[0])-sin(teta_solv[2])*cos(teta_solv[0]),sin(teta_solv[2])*sin(teta_solv[1])*sin(teta_solv[0])+cos(teta_solv[2])*cos(teta_solv[0]),cos(teta_solv[1])*sin(teta_solv[0]));
+		KDL::Vector v3(cos(teta_solv[2])*sin(teta_solv[1])*cos(teta_solv[0])+sin(teta_solv[2])*sin(teta_solv[0]),sin(teta_solv[2])*sin(teta_solv[1])*cos(teta_solv[0])-cos(teta_solv[2])*sin(teta_solv[0]),cos(teta_solv[1])*cos(teta_solv[0]));
+
+		 v1.Normalize();
+		 v2.Normalize();
+		 v3.Normalize();
+		KDL::Rotation r1(v1,v2,v3);
+
+
 		KDL::Rotation r1(KDL::Vector(cos(position_solv[2])*cos(position_solv[1]),sin(position_solv[2])*cos(position_solv[1]),-sin(position_solv[1])),
                      KDL::Vector(cos(position_solv[2])*sin(position_solv[1])*sin(position_solv[0])-sin(position_solv[2])*cos(position_solv[0]),sin(position_solv[2])*sin(position_solv[1])*sin(position_solv[0])+cos(position_solv[2])*cos(position_solv[0]),cos(position_solv[1])*sin(position_solv[0])),
                      KDL::Vector(cos(position_solv[2])*sin(position_solv[1])*cos(position_solv[0])+sin(position_solv[2])*sin(position_solv[0]),sin(position_solv[2])*sin(position_solv[1])*cos(position_solv[0])-cos(position_solv[2])*sin(position_solv[0]),cos(position_solv[1])*cos(position_solv[0])));
-
+*/
 
 		//std::cout<<vr[0]<<" "<<vr[1]<<" "<<vr[2]<<std::endl;
 		//--------Getting_Quaternions-------------
 
-		    r1.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
+		   //r1.GetQuaternion(qaternion[0],qaternion[1],qaternion[2],qaternion[3]);
 
 		//-----------------------------------------    
 		    msg.pose.position.x = position_solv[0];
@@ -103,10 +127,10 @@ int linear_inter(int mode)
 		    msg.pose.position.z = position_solv[2];
 
 
-		    msg.pose.orientation.x = qaternion[0];
-		    msg.pose.orientation.y = qaternion[1];
-		    msg.pose.orientation.z = qaternion[2];
-		    msg.pose.orientation.w = qaternion[3];
+		    //msg.pose.orientation.x = qaternion[0];
+		    //msg.pose.orientation.y = qaternion[1];
+		    //msg.pose.orientation.z = qaternion[2];
+		    //msg.pose.orientation.w = qaternion[3];
 
 		poseStatePub1.publish(msg);
 		ros::spinOnce();
