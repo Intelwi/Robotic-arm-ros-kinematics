@@ -38,14 +38,14 @@ int linear_inter(int mode)
 	double a3 = -(teta3 - teta_0[2]);
 	double b3 = teta3 - teta_0[2];
 		//-----pozycje
-	double c1 = -(x - teta_0[0]);
-	double d1 = x - teta_0[0];
+	double c1 = -(x - position_0[0]);
+	double d1 = x - position_0[0];
 
-	double c2 = -(y - teta_0[1]);
-	double d2 = y - teta_0[1];
+	double c2 = -(y - position_0[1]);
+	double d2 = y - position_0[1];
 
-	double c3 = -(z - teta_0[2]);
-	double d3 = z - teta_0[2];
+	double c3 = -(z - position_0[2]);
+	double d3 = z - position_0[2];
 
 	//-----------------------counting loop:--------------->>>
 
