@@ -2,8 +2,11 @@
 #include "ex_4/JintControlSrv.h"
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Float64.h>
+#include "nav_msgs/Path.h"
+#include <sstream>
 
 ros::Publisher JointStatePub1;
+ros::Publisher poseStatePubPath1;
 float teta_0[3]; // y(0)
 float teta_solv[3]; // rozwiazania
 int sampling = 60;
@@ -15,12 +18,6 @@ float ttime, teta1, teta2, teta3;
 // interpolacja liniowa, time-czas wykonania ruchu, tetaX - zadane kolejne kąty
 int linear_inter(int mode)
 {
-	k=0;
-	status=0;
-
-	ros::Rate loop_rate(50);
-
-
 	if(ttime <= 0)
 	{
 		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
@@ -43,6 +40,10 @@ int linear_inter(int mode)
 	}
 
 	if(status > 0) return status;
+
+	k=0;
+	status=0;
+	ros::Rate loop_rate(50);
 
 
 	float a1 = -(teta1 - teta_0[0]);
@@ -104,6 +105,7 @@ int linear_inter(int mode)
 		msg.name.push_back("elbow");
 
 		JointStatePub1.publish(msg);
+
 		ros::spinOnce();
 
 		loop_rate.sleep();
@@ -156,4 +158,3 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-

@@ -27,13 +27,18 @@ int main(int argc, char **argv)
 
 	if (client.call(srv))
 	{
-		if(srv.response.status==0)
+		ROS_INFO("Status: %d", srv.response.status);
+		if(srv.response.status == 0)
 		{		
-			ROS_INFO("Obliczenia wykonano poprawnie. Status: %d", srv.response.status);
+			ROS_INFO("Obliczenia wykonano poprawnie.", srv.response.status);
 		}	
-		else
-		{
-			ROS_INFO("ERROR: Obliczenia nie sa mozliwe do wykonania. Przekroczono limity stawow. Status: %d", srv.response.status);
+		else if(srv.response.status == -1)
+		{		
+			ROS_INFO("Nie mozna wykonac. Czas musi byc wiekszy od zera!", srv.response.status);
+		}
+		else if(srv.response.status == -2)
+		{		
+			ROS_INFO("Nie mozna wykonac. Nie ma takiego trybu.", srv.response.status);
 		}
 	}
 	else

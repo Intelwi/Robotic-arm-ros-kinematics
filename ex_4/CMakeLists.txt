@@ -216,3 +216,6 @@ target_link_libraries(oint ${catkin_LIBRARIES})
 
 add_executable(client_oint src/client_oint.cpp)
 target_link_libraries(client_oint ${catkin_LIBRARIES})
+
+add_executable(sciezka src/sciezka.cpp)
+target_link_libraries(sciezka ${catkin_LIBRARIES})

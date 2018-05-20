@@ -29,6 +29,12 @@ int linear_inter(int mode)
 	
 	ros::Rate loop_rate(50);
 
+	if(ttime <= 0)
+	{
+		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
+		return -1;
+	}
+
 	//------Obliczenia dla metody trapezowej-------------->>>
 		//-----katy
 	double a1 = -(teta1 - teta_0[0]);
@@ -140,7 +146,7 @@ int linear_inter(int mode)
 //-----------------------counting loop----------------<<<
 
 	for(int i=0;i<3;i++) teta_0[i] = teta_solv[i]; // nowe tety jako tety początkowe
-	for(int i=0;i<3;i++) position_0[i] = position_solv[i]; // nowe tety jako tety początkowe
+	for(int i=0;i<3;i++) position_0[i] = position_solv[i]; // to samo z pozycjami
 
 	return 0;
 }
