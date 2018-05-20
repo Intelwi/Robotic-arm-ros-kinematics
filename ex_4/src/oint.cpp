@@ -1,12 +1,14 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "geometry_msgs/PoseStamped.h"
+#include "nav_msgs/Path.h"
 #include <sstream>
 #include <kdl/frames.hpp>
 #include <kdl/frames_io.hpp>
 #include "ex_4/OintControlSrv.h"
 
 ros::Publisher poseStatePub1;
+ros::Publisher poseStatePubPath1;
 double teta_0[3]; // y(0)
 double teta_solv[3]; // rozwiazania
 double position_0[3]; //współrzędne początkowe xyz 
@@ -23,7 +25,7 @@ int linear_inter(int mode)
 {
 	k=0;
 	status=0;
-
+	nav_msgs::Path path; // ścieżka
 	
 	ros::Rate loop_rate(50);
 
@@ -52,12 +54,14 @@ int linear_inter(int mode)
 	while(k <= sampling*ttime)
 	{
 
-		
 		geometry_msgs::PoseStamped msg;
 
 		msg.header.frame_id="/base_link";
 		msg.header.stamp = ros::Time::now();
 
+		path.header.stamp = ros::Time::now();
+		path.header.frame_id = "/base_link";
+		
 
 		k++;
 
@@ -124,6 +128,10 @@ int linear_inter(int mode)
 		    msg.pose.orientation.w = qaternion[3];
 
 		poseStatePub1.publish(msg);
+
+		path.poses.push_back(msg); // ładowanie kolejnego elementu ścieżki
+		
+		poseStatePubPath1.publish(path); //do wyświetlania śieżki
 		ros::spinOnce();
 
 		loop_rate.sleep();
@@ -179,7 +187,10 @@ int main(int argc, char **argv)
 
 	ros::Publisher poseStatePub = n.advertise<geometry_msgs::PoseStamped>("pose_stamped", 1); 
 	poseStatePub1 = poseStatePub;
-
+	
+	ros::Publisher poseStatePubPath = n.advertise<nav_msgs::Path>("path", 1); //do publikowania ścieżek
+	poseStatePubPath1 = poseStatePubPath;// do publikowania ścieżek
+	
 	ros::ServiceServer service = n.advertiseService("oint_control_srv", doAJob);
 	ROS_INFO("Ready to do a job.");
 
