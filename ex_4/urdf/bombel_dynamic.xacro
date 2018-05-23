@@ -81,22 +81,4 @@
     <axis xyz="0 0 1" />
   </joint>
 
-<link name="elo">
-    <visual>
-      <geometry>
-        <cylinder length="0" radius="0.05"/>
-      </geometry>
-      <material name="green"/>
-      <origin xyz="0 0 0" rpy="0 1.57 0"/>
-    </visual>
-  </link>
-
-<joint name="end" type="fixed">
-    <parent link="forearm"/>
-     <child link="elo"/>
-      <limit effort="1000.0" lower="0.0" upper="1.57" velocity="0.5"/>
-     <origin xyz="${a3_length} 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1" />
-  </joint>
-
 </robot>

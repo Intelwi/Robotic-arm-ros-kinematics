@@ -11,7 +11,12 @@
 
 void warner(const std::__cxx11::basic_string<char> p); // makes name[15]
 
+ros::Publisher poseStampedPub1;
+ros::Publisher poseStatePubPath1;
+nav_msgs::Path path; // ścieżka
 double angle[3];// angles from joint_state_publisher
+//double quat_prev[4];// previous quaternions
+double alpha[3];
 double link_bombel[2];// length of links
 double qaternion[3];//values of quaternions to send
 char name[15]; //name of the fault (over range) argument
@@ -20,65 +25,9 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 {
 	for(int i; i<3; i++)
 	{
-		if((i==0 && (state->position[i] > 2.14 || state->position[i] < -2.14)) ||
-		   (i==1 && (state->position[i] > -0.1 || state->position[i] < -1.50)) ||
-		   (i==2 && (state->position[i] > 1.50 || state->position[i] < 0.1))) {
-			warner(state->name[i]);
-			ROS_WARN("\n---Wykroczenie detected---: %s\n", name);
-			continue;
-		}
-		
 		angle[i] = state->position[i];
 		std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
 	}
-}
-
-
-void warner(const std::__cxx11::basic_string<char> p) {
-	int i=0;
-	while(i < 15 && p[i] != '\0'){
-		name[i] = p[i];
-		i++;
-	}
-	name[i] = p[i];
-	//std::cout<<"warner: "<<name<<std::endl;
-}
-
-
-int main(int argc, char **argv)
-{
-	double alpha[3];
-
-	for (int i=0; i<3; i++) alpha[i]=0;
-
-	alpha[1]=-1.57;
-
-
-	ros::init(argc, argv, "KDL_DKIN");
-
-	geometry_msgs::PoseStamped msg;
-	ros::NodeHandle n;
-
-	ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("KDL_DKIN", 1);
-//------------------------
-	ros::Publisher poseStatePubPath = n.advertise<nav_msgs::Path>("path", 1); //do publikowania ścieżek
-	nav_msgs::Path path; // ścieżka
-//------------------------
-	ros::Subscriber joint_state = n.subscribe("joint_states", 1, callbackJointState);
-
-	ros::Rate loop_rate(10);
-
-	int count = 0;
-	while (ros::ok())
-	{
-		bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
-		bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
-
-		if ( !ok0 || !ok1 )
-		{
-			puts("ERROR OCCURED"); 
-			exit(1);
-		}
 
 		geometry_msgs::PoseStamped msg;
 
@@ -93,7 +42,7 @@ int main(int argc, char **argv)
 		//macierz 2 układu względem 0
 
 		KDL::Vector v1(cos(angle[0])*cos(angle[1]) ,sin(angle[0])*cos(angle[1]),-sin(angle[1]) );
-		KDL::Vector v2(-cos(angle[0])*sin(angle[1]) ,-sin(angle[0])*sin(angle[1]),-cos(angle[1])  );
+		KDL::Vector v2(-cos(angle[0])*sin(angle[1]) ,-sin(angle[0])*sin(angle[1]),-cos(angle[1]));
 		KDL::Vector v3(-sin(angle[0]),cos(angle[0]),0);
 
 		v1.Normalize();
@@ -133,15 +82,55 @@ int main(int argc, char **argv)
 
 
 
-		poseStampedPub.publish(msg); //sending geometry_msgs
+		poseStampedPub1.publish(msg); //sending geometry_msgs
 //------------------------
 		path.poses.push_back(msg); // ładowanie kolejnego elementu ścieżki
-		poseStatePubPath.publish(path); //do wyświetlania śieżki
+		poseStatePubPath1.publish(path); //do wyświetlania śieżki
 //------------------------
-		ros::spinOnce();
-	}
 	
-	loop_rate.sleep();
+/*	for(int i; i<4; i++)
+	{
+		quat_prev[i] = qaternion[i];
+	}*/
+}
+
+
+void warner(const std::__cxx11::basic_string<char> p) {
+	int i=0;
+	while(i < 15 && p[i] != '\0'){
+		name[i] = p[i];
+		i++;
+	}
+	name[i] = p[i];
+	//std::cout<<"warner: "<<name<<std::endl;
+}
+
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "KDL_DKIN");
+	ros::NodeHandle n;
+	
+	for (int i=0; i<3; i++) alpha[i]=0;
+	alpha[1]=-1.57;
+
+	bool ok0 = n.getParamCached("a2_length", link_bombel[0]);// get from parameter server
+	bool ok1 = n.getParamCached("a3_length", link_bombel[1]);// get from parameter server
+	if ( !ok0 || !ok1 )
+	{
+		puts("ERROR OCCURED"); 
+		exit(1);
+	}
+
+	ros::Publisher poseStampedPub = n.advertise<geometry_msgs::PoseStamped>("KDL_DKIN", 1);
+	poseStampedPub1 = poseStampedPub;
+//------------------------
+	ros::Publisher poseStatePubPath = n.advertise<nav_msgs::Path>("path", 1); //do publikowania ścieżek
+	poseStatePubPath1 = poseStatePubPath;// do publikowania ścieżek
+//------------------------
+	ros::Subscriber joint_state = n.subscribe("joint_states", 1, callbackJointState);
+
+	ros::spin();
 	
 	return 0;
 }

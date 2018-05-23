@@ -1,9 +1,10 @@
 #include "ros/ros.h"
-#include "ex_4/JintControlSrv.h"
+#include "std_msgs/String.h"
 #include <sensor_msgs/JointState.h>
+#include "geometry_msgs/PoseStamped.h"
 #include <std_msgs/Float64.h>
-#include "nav_msgs/Path.h"
 #include <sstream>
+#include "ex_4/JintControlSrv.h"
 
 ros::Publisher JointStatePub1;
 ros::Publisher poseStatePubPath1;
