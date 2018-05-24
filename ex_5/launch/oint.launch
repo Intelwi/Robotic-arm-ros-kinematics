@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node name="oint_pro" pkg="ex_5" type="oint_pro" output="screen"/>
+
+</launch>
