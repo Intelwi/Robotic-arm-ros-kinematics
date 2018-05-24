@@ -19,6 +19,10 @@ float ttime, teta1, teta2, teta3;
 // interpolacja liniowa, time-czas wykonania ruchu, tetaX - zadane kolejne kąty
 int linear_inter(int mode)
 {
+	k=0;
+	status=0;
+	ros::Rate loop_rate(50);
+
 	if(ttime <= 0)
 	{
 		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
@@ -41,10 +45,6 @@ int linear_inter(int mode)
 	}
 
 	if(status > 0) return status;
-
-	k=0;
-	status=0;
-	ros::Rate loop_rate(50);
 
 
 	float a1 = -(teta1 - teta_0[0]);

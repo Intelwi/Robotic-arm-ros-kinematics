@@ -16,7 +16,21 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
   {
    	angle[i]=state->position[i];
    	//std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
+	
   }
+  /*ROS_ERROR("\njeden\n");
+	if(-3.14> angle[0] || angle[0]>3.14 || -1.40>angle[1] || angle[1]>0 || 0> angle[2] || angle[2]>1.57)
+	{	
+		//ROS_ERROR("\nWRONG ANGLE!\n");
+		for(int i; i<3; i++)
+		{
+   			angle[i]=1;
+  		}
+		ROS_ERROR("\nWRONG ANGLE!\n");
+		
+	}
+ROS_ERROR("\ndwa\n");*/
+	
 }
 
 int main(int argc, char **argv)
