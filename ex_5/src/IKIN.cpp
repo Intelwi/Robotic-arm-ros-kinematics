@@ -17,7 +17,7 @@ void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
 	y = state->pose.position.y;
 	z = state->pose.position.z;
 
-	std::cout<< "I heard x: " << x <<"y: " << y << "z: "<< z <<std::endl;
+	std::cout<< "I heard x: " << x <<" y: " << y << " z: "<< z <<std::endl;
 
 }
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 
 	ros::Publisher JointStatePub = n.advertise<sensor_msgs::JointState>("joint_states", 1); 
-	ros::Subscriber joint_state = n.subscribe("geometry_msgs", 1, callbackEndState);
+	ros::Subscriber joint_state = n.subscribe("pose_stamped", 1, callbackEndState);
 
 	ros::Rate loop_rate(50);
 	
