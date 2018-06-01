@@ -5,9 +5,9 @@
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "oint_client");
-	if (argc != 9)
+	if (argc != 6)
 	{
-		ROS_INFO("usage: mode, time, roll, pitch, yaw, x, y, z");
+		ROS_INFO("usage: mode, time, x, y, z");
 		return 1;
 	}
 
@@ -18,12 +18,9 @@ int main(int argc, char **argv)
 
 	srv.request.mode = atoi(argv[1]);
 	srv.request.ttime = atof(argv[2]);
-	srv.request.roll = atof(argv[3]);
-	srv.request.pitch = atof(argv[4]);
-	srv.request.yaw = atof(argv[5]);
-	srv.request.x = atof(argv[6]);
-	srv.request.y = atof(argv[7]);
-	srv.request.z = atof(argv[8]);
+	srv.request.x = atof(argv[3]);
+	srv.request.y = atof(argv[4]);
+	srv.request.z = atof(argv[5]);
 
 	if (client.call(srv))
 	{
