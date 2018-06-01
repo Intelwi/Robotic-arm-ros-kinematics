@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 
 	ros::Publisher JointStatePub = n.advertise<sensor_msgs::JointState>("joint_states", 1); 
-	ros::Subscriber joint_state = n.subscribe("pose_stamped", 1, callbackEndState);
+	ros::Subscriber PoseStateSub = n.subscribe("pose_stamped", 1, callbackEndState);
 
 	ros::Rate loop_rate(50);
 	
@@ -47,6 +47,10 @@ int main(int argc, char **argv)
 		msg.name.push_back("rotation_joint"); //msg.position.push_back();
 		msg.name.push_back("shoulder");
 		msg.name.push_back("elbow");
+
+		msg.position.push_back(1);
+		msg.position.push_back(-0.5);
+		msg.position.push_back(0.3);
 
 		JointStatePub.publish(msg);
 
