@@ -7,12 +7,12 @@
 #include <cmath>
 
 //nowe współrzędne końcówki
-double x = 0.4;
+double x = 1;
 double y = 0;
 double z = 0.4;
 
 //stare współrzędne końcówki
-double x_old = 0.4;
+double x_old = 1;
 double y_old = 0;
 double z_old = 0.4;
 
@@ -23,7 +23,7 @@ double link_2;
 //długości podstaw
 double base = 0.2;
 double rot_base = 0.1;
-
+double a0 = 0.3;
 //poszczególne kąty w stawach
 double rotate;
 double flex1;
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 		
 		/**
 			Rozwiazywanie zadania kinematyki odwrotnej
-		*/
+		
 
 		//wyliczenie ąta dla bazy obrotowej <-----------------------------------NIE DZIAŁA XD
 		double a = sqrt( pow(x,2) + pow(y,2) );
@@ -81,10 +81,11 @@ int main(int argc, char **argv)
 		double c = sqrt( pow(abs(x-x_old),2) + pow(abs(y-y_old),2) );
 
 		rotate = acos( ( (pow(a,2) + pow(b,2) - pow(c,2) ) / ( 2*a*b ) ) );
+		*/
+		rotate = atan(y/x);
+		//if(rotate>1 && rotate<-1) std::cout<<"zle katy bazy"<<std::endl;
 
-		if(rotate>1 && rotate<-1) std::cout<<"zle katy bazy"<<std::endl;
-
-		std::cout<<"arg acos: "<<(pow(a,2) + pow(b,2) - pow(c,2) ) / ( 2*a*b )<<" "<<std::endl;
+		std::cout<<"arg atan: "<<(y/x)<<" "<<std::endl;
 		//KONIEC###########################################
 
 
