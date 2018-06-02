@@ -9,7 +9,7 @@
 //nowe współrzędne końcówki
 double x = 1;
 double y = 0;
-double z = 0.4;
+double z = -0.4;
 
 //stare współrzędne końcówki
 double x_old = 1;
@@ -26,8 +26,8 @@ double rot_base = 0.1;
 double a0 = 0.3;
 //poszczególne kąty w stawach
 double rotate;
-double flex1;
-double flex2;
+double flex1=-0.25;
+double flex2=-0.25;
 double flex_end;
 
 //odebranie wiadomości ze współrzędnymi końcówki
@@ -74,28 +74,28 @@ int main(int argc, char **argv)
 		/**
 			Rozwiazywanie zadania kinematyki odwrotnej
 		
-
+		*/
 		//wyliczenie ąta dla bazy obrotowej <-----------------------------------NIE DZIAŁA XD
 		double a = sqrt( pow(x,2) + pow(y,2) );
-		double b = sqrt( pow(x_old,2) + pow(y_old,2) );
+		double b = sqrt( pow(a,2) + pow(z-a0,2) );
 		double c = sqrt( pow(abs(x-x_old),2) + pow(abs(y-y_old),2) );
 
-		rotate = acos( ( (pow(a,2) + pow(b,2) - pow(c,2) ) / ( 2*a*b ) ) );
-		*/
 		rotate = atan(y/x);
-		//if(rotate>1 && rotate<-1) std::cout<<"zle katy bazy"<<std::endl;
-
-		std::cout<<"arg atan: "<<(y/x)<<" "<<std::endl;
-		//KONIEC###########################################
-
+		
+		flex1 = atan( a/(z - a0) );
+		flex2 = acos( ( pow(link_1,2) +pow(b,2) - pow(link_2,2) )/(2*link_1*b) );;
+		
+		std::cout<<"arg aatan: "<<(y/x)<<" "<<std::endl;
 
 		std::cout<<"kat baza: "<<rotate<<" "<<std::endl;
+		std::cout<<"kat baza: "<<flex1<<" "<<std::endl;
+
 		msg.name.push_back("rotation_joint"); //msg.position.push_back();
 		msg.name.push_back("shoulder");
 		msg.name.push_back("elbow");
 
 		msg.position.push_back(rotate);
-		msg.position.push_back(-0.5);
+		msg.position.push_back(flex1);
 		msg.position.push_back(0.3);
 
 		JointStatePub.publish(msg);
