@@ -1,26 +1,27 @@
 #include "ros/ros.h"
-#include "ex_5/OintControlSrv.h"
+#include "ex_5/WariatControlSrv.h"
 #include <cstdlib>
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "oint_client");
-	if (argc != 6)
+	ros::init(argc, argv, "wariat_client");
+	if (argc != 7)
 	{
-		ROS_INFO("usage: mode, time, x, y, z");
+		ROS_INFO("usage: mode, time, x, y, z, ksztalt");
 		return 1;
 	}
 
 	ros::NodeHandle n;
-	ros::ServiceClient client = n.serviceClient<ex_5::OintControlSrv>("oint_control_srv");
+	ros::ServiceClient client = n.serviceClient<ex_5::WariatControlSrv>("wariat_control_srv");
 
-	ex_5::OintControlSrv srv;
+	ex_5::WariatControlSrv srv;
 
 	srv.request.mode = atoi(argv[1]);
 	srv.request.ttime = atof(argv[2]);
 	srv.request.x = atof(argv[3]);
 	srv.request.y = atof(argv[4]);
 	srv.request.z = atof(argv[5]);
+	srv.request.shape = argv[6];
 
 	if (client.call(srv))
 	{
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		ROS_ERROR("Failed to call service oint");
+		ROS_ERROR("Failed to call service wariat");
 		return 1;
 	}
 

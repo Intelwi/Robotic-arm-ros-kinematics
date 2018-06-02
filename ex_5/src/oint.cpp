@@ -5,7 +5,7 @@
 #include <sstream>
 #include <kdl/frames.hpp>
 #include <kdl/frames_io.hpp>
-#include "ex_4/OintControlSrv.h"
+#include "ex_5/OintControlSrv.h"
 
 ros::Publisher poseStatePub1;
 ros::Publisher poseStatePubPath1;
@@ -119,7 +119,7 @@ int linear_inter(int mode)
 
 
 
-bool doAJob(ex_4::OintControlSrv::Request &req,  ex_4::OintControlSrv::Response &res)
+bool doAJob(ex_5::OintControlSrv::Request &req,  ex_5::OintControlSrv::Response &res)
 {
 	ROS_INFO("mode: %d, time=%f, x=%f, y=%f, z=%f", req.mode, req.ttime, req.x, req.y, req.z);
 

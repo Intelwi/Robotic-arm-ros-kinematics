@@ -63,6 +63,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_service_files(
    FILES
    OintControlSrv.srv
+   WariatControlSrv.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -213,3 +214,11 @@ target_link_libraries(ocmd ${catkin_LIBRARIES})
 
 add_executable(IKIN src/IKIN.cpp)
 target_link_libraries(IKIN ${catkin_LIBRARIES})
+
+#################################
+
+add_executable(wariat src/wariat.cpp)
+target_link_libraries(wariat ${catkin_LIBRARIES})
+
+add_executable(client_wariat src/client_wariat.cpp)
+target_link_libraries(client_wariat ${catkin_LIBRARIES})
