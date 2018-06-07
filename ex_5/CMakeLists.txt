@@ -222,3 +222,6 @@ target_link_libraries(wariat ${catkin_LIBRARIES})
 
 add_executable(client_wariat src/client_wariat.cpp)
 target_link_libraries(client_wariat ${catkin_LIBRARIES})
+
+add_executable(sciezkaR src/sciezkaR.cpp)
+target_link_libraries(sciezkaR ${catkin_LIBRARIES})

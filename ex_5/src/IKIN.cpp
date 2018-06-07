@@ -19,8 +19,8 @@ double y_old = 0;
 double z_old = 0.4;*/
 
 //długości członów
-double a1;
 double a2;
+double a3;
 
 /*//długości podstaw
 double base = 0.2;
@@ -34,7 +34,7 @@ double flex2=-0.25;*/
 
 //--------------------------------------------
 double teta1, teta2, teta3;
-double p, c, a, h, alfa;
+double p, c, a, h, alfa, hyp;
 //--------------------------------------------
 ros::Publisher JointStatePub1;
 
@@ -50,30 +50,44 @@ void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
 	//ciekawe
 
 	sensor_msgs::JointState msg;
-		msg.header.stamp = ros::Time::now();
+	msg.header.stamp = ros::Time::now();
 
 	z = z - a0;
-		p = sqrt(x*x + y*y);
-		c = sqrt(p*p + z*z);
-		a = a1*c/(a1 + a2);
-		h = sqrt(abs(a1*a1 - a*a));
-		alfa = atan2(h,a);
+/*	p = sqrt(x*x + y*y);
+	c = sqrt(p*p + z*z);
+	a = (a1*a1 - a2*a2 + c*c)/(2*c); //(a1*a1 - a2*a2 + c*c)/(2*c) // a1*c/(a1 + a2)
+	
+	if(c > a1 + a2){
+		ROS_WARN("Za daleko ziom");
+		return;
+	}
+	
+	h = sqrt(a1*a1 - a*a);
+	alfa = atan2(h,a);
+*/
+	teta1 = atan2(y,x);
+	//teta2 = (alfa + atan2(z,p)) - PI/2;
+	//teta3 = PI*2 - (alfa + atan2(h,(c-a)));
 
-		teta1 = atan2(y,x);
-		teta2 = (alfa + atan2(z,p)) - PI/2;
-		teta3 = alfa + atan2(h,(c-a));
-		std::cout<<"teta1: "<<teta1<<" "<<a1<<" "<<a<<std::endl;
-		std::cout<<"teta2: "<<teta2<<std::endl;
-
-		msg.name.push_back("rotation_joint"); //msg.position.push_back();
-		msg.name.push_back("shoulder");
-		msg.name.push_back("elbow");
-
-		msg.position.push_back(teta1);
-		msg.position.push_back(teta2);
-		msg.position.push_back(teta3);
+	hyp = pow((x/cos(teta1)),2) + pow(z,2);
+	teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
+	if(x<0)
+		teta2=teta2-PI;
+	teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
 		
-		JointStatePub1.publish(msg);
+	std::cout<<"teta1: "<<teta1<<" a1: "<<a2<<" a: "<<a<<std::endl;
+	std::cout<<"teta2: "<<teta2<<" c: "<<c<<std::endl;
+	std::cout<<"teta3: "<<teta3<<std::endl;
+
+	msg.name.push_back("rotation_joint"); //msg.position.push_back();
+	msg.name.push_back("shoulder");
+	msg.name.push_back("elbow");
+
+	msg.position.push_back(teta1);
+	msg.position.push_back(teta2);
+	msg.position.push_back(teta3);
+
+	JointStatePub1.publish(msg);
 }
 
 int main(int argc, char **argv)
@@ -87,8 +101,8 @@ int main(int argc, char **argv)
 	
 	
 	//pobranie z serwera parametrów
-	bool ok0 = n.getParamCached("a2_length", a1);
-	bool ok1 = n.getParamCached("a3_length", a2);
+	bool ok0 = n.getParamCached("a2_length", a2);
+	bool ok1 = n.getParamCached("a3_length", a3);
 
 	if ( !ok0 || !ok1 )
 	{

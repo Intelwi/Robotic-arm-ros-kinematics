@@ -8,6 +8,8 @@
 #include "ex_5/WariatControlSrv.h"
 #include <math.h>
 
+#define PI 3.14159265358
+
 ros::Publisher poseStatePub1;
 ros::Publisher poseStatePubPath1;
 double position_0[3]; //współrzędne początkowe xyz 
@@ -43,20 +45,20 @@ int linear_inter(int mode)
 	if(shape == "ellipse")
 	{
 		//----------elipsa:
-		t=-0.251328/2;
-		a=x;
-		b=y;
-		x=0;
-		y=0;
+		t=0;
+		a=x; // wielka półoś
+		b=y; // mała półoś
+		x=a; // x=a*cos(t)
+		y=0; // y=b*sin(t)
 	}
-	else if(shape == "ellipse2")
+/*	else if(shape == "ellipse2")
 	{
 		a=1;
 		b=0.5;
 		x=-1;
 		y=0;
 	}
-
+*/
 	while(!finished)
 	{
 		k=0;
@@ -151,9 +153,9 @@ int linear_inter(int mode)
 		}
 		else if(shape == "ellipse")
 		{
-			if(t < 6.2832) // 2*Pi
+			if(t < 2*PI)
 			{
-				t=t+0.251328/2;
+				t=t+PI/20; // elipsa z 40-tu elemetów
 				x=a*cos(t);
 				y=b*sin(t);
 			}
@@ -163,7 +165,7 @@ int linear_inter(int mode)
 			count++;
 			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
-		else if(shape == "ellipse2")
+/*		else if(shape == "ellipse2")
 		{
 			if(x < 0.9)
 			{
@@ -176,7 +178,7 @@ int linear_inter(int mode)
 			count++;
 			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
-		else
+*/		else
 		{
 			ROS_ERROR("Bledny ksztalt", count, x, y);
 			status = 1;
