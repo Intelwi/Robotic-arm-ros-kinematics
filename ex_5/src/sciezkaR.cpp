@@ -13,10 +13,11 @@ void warner(const std::__cxx11::basic_string<char> p); // makes name[15]
 
 ros::Publisher poseStampedPub1;
 ros::Publisher poseStatePubPath1;
-nav_msgs::Path pathR; // ścieżka
+
 double angle[3];// angles from joint_state_publisher
 //double quat_prev[4];// previous quaternions
 double alpha[3];
+nav_msgs::Path pathR; // ścieżka
 double link_bombel[2];// length of links
 double qaternion[3];//values of quaternions to send
 char name[15]; //name of the fault (over range) argument
@@ -29,6 +30,7 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 		std::cout<<"I heard : "<<state->name[i]<<" , value: "<<angle[i]<<std::endl;
 	}
 	
+		
 		geometry_msgs::PoseStamped msg;
 
 		msg.header.frame_id="/base_link";
@@ -74,12 +76,12 @@ void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
 		msg.pose.position.y = sin(angle[0])*cos(angle[1])*link_bombel[0]+vr[1];
 		msg.pose.position.z = -sin(angle[1])*link_bombel[0]+0.3+vr[2];
 
-/*
-		msg.pose.orientation.x = qaternion[0];
-		msg.pose.orientation.y = qaternion[1];
-		msg.pose.orientation.z = qaternion[2];
-		msg.pose.orientation.w = qaternion[3];
-*/
+
+		msg.pose.orientation.x = 0;//qaternion[0];
+		msg.pose.orientation.y = 0;//qaternion[1];
+		msg.pose.orientation.z = 0;//qaternion[2];
+		msg.pose.orientation.w = 0;//qaternion[3];
+
 
 
 		poseStampedPub1.publish(msg); //sending geometry_msgs

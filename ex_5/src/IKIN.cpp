@@ -46,28 +46,19 @@ void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
 	y = state->pose.position.y;
 	z = state->pose.position.z;
 
-	std::cout<< "I heard x: " << x <<" y: " << y << " z: "<< z <<std::endl;
-	//ciekawe
+	if(sqrt(pow(z-a0,2)+x*x+y*y)>(a2+a3) || z<(a0-a3))
+	{
+		ROS_ERROR("Calculations not possible, selected point too far");
+		return;
+
+	} 
 
 	sensor_msgs::JointState msg;
 	msg.header.stamp = ros::Time::now();
 
 	z = z - a0;
-/*	p = sqrt(x*x + y*y);
-	c = sqrt(p*p + z*z);
-	a = (a1*a1 - a2*a2 + c*c)/(2*c); //(a1*a1 - a2*a2 + c*c)/(2*c) // a1*c/(a1 + a2)
-	
-	if(c > a1 + a2){
-		ROS_WARN("Za daleko ziom");
-		return;
-	}
-	
-	h = sqrt(a1*a1 - a*a);
-	alfa = atan2(h,a);
-*/
 	teta1 = atan2(y,x);
-	//teta2 = (alfa + atan2(z,p)) - PI/2;
-	//teta3 = PI*2 - (alfa + atan2(h,(c-a)));
+
 
 	hyp = pow((x/cos(teta1)),2) + pow(z,2);
 	teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
