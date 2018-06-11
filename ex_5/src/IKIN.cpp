@@ -61,10 +61,19 @@ void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
 
 
 	hyp = pow((x/cos(teta1)),2) + pow(z,2);
-	teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
+	teta2 = -atan2(z*cos(teta1),x)+3.14+acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
+	if(x>0)
+		teta2=teta2-PI;
+	teta3 = -acos(((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3)));
+
+/** normalne rozwiazanie
+
+teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
 	if(x<0)
 		teta2=teta2-PI;
-	teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
+teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
+
+*/
 		
 	std::cout<<"teta1: "<<teta1<<" a1: "<<a2<<" a: "<<a<<std::endl;
 	std::cout<<"teta2: "<<teta2<<" c: "<<c<<std::endl;
