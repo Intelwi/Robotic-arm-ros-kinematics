@@ -75,9 +75,9 @@ teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
 
 
 		
-	std::cout<<"teta1: "<<teta1<<" a1: "<<a2<<" a: "<<a<<std::endl;
+	/*std::cout<<"teta1: "<<teta1<<" a1: "<<a2<<" a: "<<a<<std::endl;
 	std::cout<<"teta2: "<<teta2<<" c: "<<c<<std::endl;
-	std::cout<<"teta3: "<<teta3<<std::endl;
+	std::cout<<"teta3: "<<teta3<<std::endl;*/
 
 	msg.name.push_back("rotation_joint"); //msg.position.push_back();
 	msg.name.push_back("shoulder");
@@ -96,8 +96,8 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 
 	teta1 = 0;
-	teta2 = -1;
-	teta3 = 1;
+	teta2 = -1.2;
+	teta3 = 1.2;
 	
 	
 	//pobranie z serwera parametrów

@@ -38,6 +38,10 @@ int main(int argc, char **argv)
 		{		
 			ROS_INFO("Nie mozna wykonac. Nie ma takiego trybu.", srv.response.status);
 		}
+		else if(srv.response.status == 1)
+		{		
+			ROS_INFO("Nie mozna wykonac. Nie ma takiego ksztaltu.", srv.response.status);
+		}
 	}
 	else
 	{

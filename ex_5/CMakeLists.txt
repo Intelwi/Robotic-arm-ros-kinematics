@@ -206,12 +206,6 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-add_executable(oint_pro src/oint.cpp)
-target_link_libraries(oint_pro ${catkin_LIBRARIES})
-
-add_executable(ocmd src/client_oint.cpp)
-target_link_libraries(ocmd ${catkin_LIBRARIES})
-
 add_executable(IKIN src/IKIN.cpp)
 target_link_libraries(IKIN ${catkin_LIBRARIES})
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
   <node name="wariat" pkg="ex_5" type="wariat" output="screen"/>
   <node name="IKIN" pkg="ex_5" type="IKIN" output="screen"/>
   <node name="sciezkaR" pkg="ex_5" type="sciezkaR" output="screen"/>

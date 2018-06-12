@@ -30,6 +30,8 @@ int linear_inter(int mode)
 	//--------------
 	finished = false;
 	int count = 0;
+	double mo, tt, wys;
+	bool back = true;
 	//--------------
 	status=0;
 	nav_msgs::Path path; // ścieżka
@@ -41,30 +43,48 @@ int linear_inter(int mode)
 		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
 		return -1;
 	}
+	if(mode != 1 && mode != 2)
+	{
+		ROS_WARN("\nNie ma takiego trybu.\n");
+		return -2;
+	}
 
 	if(shape == "ellipse")
 	{
-		//----------elipsa:
 		t=0;
 		a=x; // wielka półoś
 		b=y; // mała półoś
-		x=a; // x=a*cos(t)
-		y=0; // y=b*sin(t)
+		// x = a*cos(t) = a = x
+		y=0; // y = b*sin(t)
 	}
-/*	else if(shape == "ellipse2")
+	else if(shape == "ellipse2")
 	{
-		a=1;
-		b=0.5;
-		x=-1;
-		y=0;
+		wys = position_0[2];
+		t=0;
+		a=y; // wielka półoś
+		b=z; // mała półoś
+		// y = a*cos(t) = a = y
+		z=wys; // y = b*sin(t)
 	}
-*/
-	while(!finished)
+	
+	// powolne docieranie do punktu początkowego kształtu 
+	tt = ttime;
+	mo = mode;
+	ttime = 2;
+	mode = 2;
+
+	while(ros::ok()) //!finished
 	{
 		k=0;
+			
+		if(finished)
+		{
+			finished = false;
+			count = 0;
+			t=0;
+		}
 		
-	//------Obliczenia dla metody trapezowej-------------->>>
-	
+		// Obliczenia dla metody trapezowej
 		double c1 = -(x - position_0[0]);
 		double d1 = x - position_0[0];
 
@@ -75,7 +95,7 @@ int linear_inter(int mode)
 		double d3 = z - position_0[2];
 		
 		
-	//-----------------------counting loop:--------------->>>
+	//-----------------------interpolating loop:--------------->>>
 		while(k <= sampling*ttime)
 		{
 
@@ -90,7 +110,7 @@ int linear_inter(int mode)
 
 			k++;
 
-	//---------1st mode next tetas:
+	//---------1st mode next position:
 
 			if(mode == 1)
 			{
@@ -101,7 +121,7 @@ int linear_inter(int mode)
 				position_solv[2] = position_0[2] + (z - position_0[2])*k/(ttime*sampling);
 			}
 
-	//---------2nd mode next tetas:
+	//---------2nd mode next position:
 
 
 			else if(mode == 2)
@@ -115,11 +135,6 @@ int linear_inter(int mode)
 				position_solv[2] = (1-tx)*position_0[2] + tx*z + tx*(1-tx)*(c3*(1-tx) + d3*tx);
 			}
 
-			else
-			{
-				ROS_WARN("\nNie ma takiego trybu.\n");
-				return -2;
-			}
 
 	//---------sending:
 
@@ -136,11 +151,18 @@ int linear_inter(int mode)
 
 			loop_rate.sleep();
 		}
-	//-----------------------counting loop----------------<<<
+	//-----------------------interpolating loop----------------<<<
+		
+		if(back)
+		{
+			ttime = tt;
+			mode = mo;
+			back=false;
+		}
 		
 		for(int i=0;i<3;i++) position_0[i] = position_solv[i]; // nowe pozycje jako pozycje poczatkowe
 		
-		/* kwadrat */
+		/* kwadrat poziomy */
 		if(shape == "square")
 		{
 			help=x;
@@ -151,6 +173,7 @@ int linear_inter(int mode)
 				finished = true;
 			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
+		/* elipsa pozioma */
 		else if(shape == "ellipse")
 		{
 			if(t < 2*PI)
@@ -158,27 +181,29 @@ int linear_inter(int mode)
 				t=t+PI/20; // elipsa z 40-tu elemetów
 				x=a*cos(t);
 				y=b*sin(t);
+				
+				count++;
+				ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 			}
 			else
 				finished = true;
-			
-			count++;
-			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
-/*		else if(shape == "ellipse2")
+		/* elipsa pionowa */
+		else if(shape == "ellipse2")
 		{
-			if(x < 0.9)
+			if(t < 2*PI)
 			{
-				x=x+0.1;
-				y=b*sqrt(1-(x*x)/(a*a));
+				t=t+PI/20; // elipsa z 40-tu elemetów
+				y=a*cos(t);
+				z=b*sin(t)+wys;
+				
+				count++;
+				ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 			}
 			else
 				finished = true;
-			
-			count++;
-			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
-*/		else
+		else
 		{
 			ROS_ERROR("Bledny ksztalt", count, x, y);
 			status = 1;
@@ -217,9 +242,9 @@ int main(int argc, char **argv)
 // tety początkowe:
 	for(int i=0; i<3; i++) position_solv[i]=0;
 
-	position_0[0] = 0;
+	position_0[0] = 0.5*0.362357754+0.3;
 	position_0[1] = 0;
-	position_0[2] = 0;
+	position_0[2] = 0.5*0.932039086+0.3;
 	
 	ros::Publisher poseStatePub = n.advertise<geometry_msgs::PoseStamped>("pose_stamped", 1); 
 	poseStatePub1 = poseStatePub;
