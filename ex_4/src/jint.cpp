@@ -22,7 +22,7 @@ int linear_inter(int mode)
 	k=0;
 	status=0;
 	ros::Rate loop_rate(50);
-
+/** Do zadania 4, zakomentowane bo uzywamy do piatego gdzie nie moze byc ograniczen
 	if(ttime <= 0)
 	{
 		ROS_WARN("\nCzas musi byc wiekszy od zera!\n");
@@ -43,7 +43,7 @@ int linear_inter(int mode)
 		ROS_WARN("\n---Wykroczenie detected---: %s\n", "elbow");
 		status++;
 	}
-
+*/
 	if(status > 0) return status;
 
 

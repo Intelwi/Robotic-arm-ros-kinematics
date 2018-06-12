@@ -26,6 +26,7 @@ double a3;
 double base = 0.2;
 double rot_base = 0.1;*/
 double a0 = 0.3;
+double angle[3];// angles from joint_state_publisher
 //poszczególne kąty w stawach
 /*double rotate;
 double flex1=-0.25;
@@ -37,6 +38,12 @@ double teta1, teta2, teta3;
 double p, c, a, h, alfa, hyp;
 //--------------------------------------------
 ros::Publisher JointStatePub1;
+
+void callbackJointState(const sensor_msgs::JointState::ConstPtr& state)
+{
+	for(int i; i<3; i++) angle[i] = state->position[i];
+
+}
 
 //odebranie wiadomości ze współrzędnymi końcówki
 void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
@@ -61,18 +68,20 @@ void callbackEndState(const geometry_msgs::PoseStamped::ConstPtr& state)
 
 
 	hyp = pow((x/cos(teta1)),2) + pow(z,2);
-/**
-	teta2 = -atan2(z*cos(teta1),x)+3.14+acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
-	if(x>0)
-		teta2=teta2-PI;
-	teta3 = -acos(((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3)));
-*/
 
-teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
-	if(x<0)
-		teta2=teta2-PI;
-teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
+	if(angle[2] < 0)
+	{
+		teta2 = -atan2(z*cos(teta1),x)+3.14+acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
+		if(x>0) teta2=teta2-PI;
+		teta3 = -acos(((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3)));
+	}
 
+	else
+	{
+		teta2 = -atan2(z*cos(teta1),x)-acos((pow(a2,2)-pow(a3,2)+hyp)/(2*a2*pow(hyp,0.5)));
+		if(x<0) teta2=teta2-PI;
+		teta3 = acos((-pow(a2,2)-pow(a3,2) + hyp)/(2*a2*a3));
+	}
 
 		
 	/*std::cout<<"teta1: "<<teta1<<" a1: "<<a2<<" a: "<<a<<std::endl;
@@ -113,6 +122,7 @@ int main(int argc, char **argv)
 	ros::Publisher JointStatePub = n.advertise<sensor_msgs::JointState>("joint_states", 1); 
 	JointStatePub1=JointStatePub;
 	ros::Subscriber PoseStateSub = n.subscribe("pose_stamped", 1, callbackEndState);
+	ros::Subscriber joint_state = n.subscribe("joint_states", 1, callbackJointState);
 	//rozwiązywanie OZK i wysłanie do RobotStatePublisher
 /*
 	while(ros::ok())
