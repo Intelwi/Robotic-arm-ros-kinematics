@@ -219,3 +219,6 @@ target_link_libraries(client_wariat ${catkin_LIBRARIES})
 
 add_executable(sciezkaR src/sciezkaR.cpp)
 target_link_libraries(sciezkaR ${catkin_LIBRARIES})
+
+add_executable(continous_client src/continous_client.cpp)
+target_link_libraries(continous_client ${catkin_LIBRARIES})

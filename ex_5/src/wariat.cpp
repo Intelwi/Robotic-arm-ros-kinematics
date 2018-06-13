@@ -73,7 +73,7 @@ int linear_inter(int mode)
 	ttime = 2;
 	mode = 2;
 
-	while(ros::ok()) //!finished
+	while(!finished) // !finished | ros::ok()
 	{
 		k=0;
 			
@@ -173,6 +173,8 @@ int linear_inter(int mode)
 				finished = true;
 			ROS_INFO("Pentla: %d. x: %f, y: %f", count, x, y);
 		}
+		/* kwadrat pionowy */
+		
 		/* elipsa pozioma */
 		else if(shape == "ellipse")
 		{
@@ -227,8 +229,8 @@ bool doAJob(ex_5::WariatControlSrv::Request &req,  ex_5::WariatControlSrv::Respo
 	ROS_INFO("mode: %d, time=%f, x=%f, y=%f, z=%f, %s", req.mode, ttime, x, y, z, shape.c_str());
 
 	res.status = linear_inter(req.mode);
-  
 	ROS_INFO("sending back response: [%d]", res.status);
+
 	return true;
 }
 
